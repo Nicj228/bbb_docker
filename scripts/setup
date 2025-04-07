@@ -10,13 +10,7 @@ if ! [ -x "$(command -v curl)" ]; then
   exit 1
 fi
 
-# load .env
-if [ -f .env ]
-then
-  echo "Error: the configuration file .env already exists."
-  echo "either edit variables manually in there or remove the file and try this script again"
-  exit 1
-fi
+
 
 . scripts/functions.sh
 ensure_bbbhtml5yml
