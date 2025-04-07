@@ -42,10 +42,8 @@ then
     done
 fi
 
-DOMAIN=""
-while [[ -z "$DOMAIN" ]]; do
-    read -p "Please enter the domain name: " DOMAIN
-done
+DOMAIN="bbb.vr-ai.co"
+
 
 recording=""
 echo "Should the recording feature be included?"
