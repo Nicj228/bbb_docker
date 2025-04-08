@@ -1,4 +1,6 @@
-{
+
+version: '3.8'
+
 services:
    bbb-web:
     build: 
@@ -497,5 +499,3 @@ networks:
       driver: default
       config:
         - subnet: "10.7.7.0/24"
-
-}
