@@ -193,7 +193,7 @@ services:
       - freeswitch
     environment:
       ESL_PASSWORD: <span class="math-inline">\{FSESL\_PASSWORD\:\-ClueCon\}
-MS\_WEBRTC\_LISTEN\_IPS\: '\[\{"ip"\:"</span>{EXTERNAL_IPv4}", "announcedIp":"${EXTERNAL_IPv4}"}]'
+      MS\_WEBRTC\_LISTEN\_IPS\: '\[\{"ip"\:"</span>{EXTERNAL_IPv4}", "announcedIp":"${EXTERNAL_IPv4}"}]'
     volumes:
       - ./data/mediasoup:/var/mediasoup
     tmpfs:
