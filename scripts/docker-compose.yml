@@ -1,9 +1,8 @@
-
 version: '3.8'
 
 services:
-   bbb-web:
-    build: 
+  bbb-web:
+    build:
       context: mod/bbb-web
       additional_contexts:
         - src-web=./repos/bigbluebutton/bigbluebutton-web
@@ -14,10 +13,10 @@ services:
     image: alangecker/bbb-docker-web:v3.0.4
     restart: unless-stopped
     depends_on:
-        - redis
-        - etherpad
-        - bbb-pads
-        - collabora
+      - redis
+      - etherpad
+      - bbb-pads
+      - collabora
     healthcheck:
       test: wget --no-proxy --no-verbose --tries=1 --spider http://10.7.7.2:8090/bigbluebutton/api || exit 1
       start_period: 2m
@@ -41,10 +40,9 @@ services:
       bbb-net:
         ipv4_address: 10.7.7.2
 
-
   freeswitch:
     container_name: bbb-freeswitch
-    build: 
+    build:
       context: mod/freeswitch
       additional_contexts:
         - freeswitch=./repos/freeswitch/
@@ -70,7 +68,6 @@ services:
       DISABLE_SOUND_ALONE: ${DISABLE_SOUND_ALONE:-false}
       SOUNDS_LANGUAGE: ${SOUNDS_LANGUAGE:-en-us-callie}
       ESL_PASSWORD: ${FSESL_PASSWORD:-ClueCon}
-    
     volumes:
       - ./conf/sip_profiles:/etc/freeswitch/sip_profiles/external-dialin
       - ./data/freeswitch-meetings:/var/freeswitch/meetings
@@ -100,10 +97,8 @@ services:
     volumes:
       - ./data/bigbluebutton:/var/bigbluebutton
       - ${DEFAULT_PRESENTATION:-/dev/null}:/www/default.pdf
-
-      
     tmpfs:
-     - /tmp
+      - /tmp
     network_mode: host
     extra_hosts:
       - "host.docker.internal:10.7.7.1"
@@ -115,7 +110,7 @@ services:
       - "bbb-graphql-middleware:10.7.7.32"
 
   etherpad:
-    build: 
+    build:
       context: mod/etherpad
       additional_contexts:
         - plugin=./repos/bbb-etherpad-plugin
@@ -134,7 +129,7 @@ services:
         ipv4_address: 10.7.7.4
 
   bbb-pads:
-    build: 
+    build:
       context: mod/bbb-pads
       additional_contexts:
         - src=./repos/bbb-pads
@@ -161,10 +156,10 @@ services:
       - etherpad
       - bbb-pads
     networks:
-    # need connections to:
-    # https://github.com/bigbluebutton/bigbluebutton/blob/v2.7.0/bbb-export-annotations/config/settings.json
-    # "bbbWebAPI": "http://127.0.0.1:8090",    -> bbb-web
-    # "bbbPadsAPI": "http://127.0.0.1:9002",   -> bbb-pads
+      # need connections to:
+      # https://github.com/bigbluebutton/bigbluebutton/blob/v2.7.0/bbb-export-annotations/config/settings.json
+      # "bbbWebAPI": "http://127.0.0.1:8090"    -> bbb-web
+      # "bbbPadsAPI": "http://127.0.0.1:9002"    -> bbb-pads
       bbb-net:
         ipv4_address: 10.7.7.19
     volumes:
@@ -185,7 +180,7 @@ services:
         ipv4_address: 10.7.7.5
 
   webrtc-sfu:
-    build: 
+    build:
       context: mod/webrtc-sfu
       additional_contexts:
         - source=./repos/bbb-webrtc-sfu
@@ -197,10 +192,8 @@ services:
       - redis
       - freeswitch
     environment:
-      ESL_PASSWORD: ${FSESL_PASSWORD:-ClueCon}
-      
-      MS_WEBRTC_LISTEN_IPS: '[{"ip":"${EXTERNAL_IPv4}", "announcedIp":"${EXTERNAL_IPv4}"}]'
-      
+      ESL_PASSWORD: <span class="math-inline">\{FSESL\_PASSWORD\:\-ClueCon\}
+MS\_WEBRTC\_LISTEN\_IPS\: '\[\{"ip"\:"</span>{EXTERNAL_IPv4}", "announcedIp":"${EXTERNAL_IPv4}"}]'
     volumes:
       - ./data/mediasoup:/var/mediasoup
     tmpfs:
@@ -212,7 +205,7 @@ services:
       memlock: -1 # allow io_uring_register_buffers to allocate enough ram
 
   fsesl-akka:
-    build: 
+    build:
       context: mod/fsesl-akka
       additional_contexts:
         - src-common-message=./repos/bigbluebutton/bbb-common-message
@@ -232,7 +225,7 @@ services:
         ipv4_address: 10.7.7.14
 
   apps-akka:
-    build: 
+    build:
       context: mod/apps-akka
       additional_contexts:
         - src-common-message=./repos/bigbluebutton/bbb-common-message
@@ -280,14 +273,11 @@ services:
       bbb-net:
         ipv4_address: 10.7.7.31
 
-
   bbb-graphql-actions:
     build:
       context: mod/bbb-graphql-actions
-      
       additional_contexts:
         - src=./repos/bigbluebutton/bbb-graphql-actions
-      
       args:
         BBB_BUILD_TAG: v3.0.x-release--2025-02-06-143818
     image: alangecker/bbb-docker-graphql-actions:v3.0.4
@@ -298,15 +288,12 @@ services:
     networks:
       bbb-net:
         ipv4_address: 10.7.7.30
-    
 
   bbb-graphql-middleware:
     build:
       context: mod/bbb-graphql-middleware
-      
       additional_contexts:
         - src=./repos/bigbluebutton/bbb-graphql-middleware
-      
       args:
         BBB_BUILD_TAG: v3.0.x-release--2025-02-06-143818
     image: alangecker/bbb-docker-graphql-middleware:v3.0.4
@@ -322,8 +309,6 @@ services:
     extra_hosts:
       - "nginx:10.7.7.1"
 
-    
-
   collabora:
     image: collabora/code:latest
     restart: unless-stopped
@@ -336,12 +321,10 @@ services:
     logging:
       driver: none
 
-
   periodic:
     build: mod/periodic
     image: alangecker/bbb-docker-periodic:v3.0.0
     restart: unless-stopped
-
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./data/bigbluebutton:/var/bigbluebutton
@@ -356,10 +339,9 @@ services:
       bbb-net:
         ipv4_address: 10.7.7.12
 
-
   # recordings
   recordings:
-    build: 
+    build:
       context: mod/recordings
       additional_contexts:
         - record-core=./repos/bigbluebutton/record-and-playback/core
@@ -395,107 +377,3 @@ services:
         - src=./repos/bbb-webrtc-recorder
     image: alangecker/bbb-docker-webrtc-recorder:v0.8.0
     depends_on:
-      - redis
-    volumes: 
-      - ./data/bbb-webrtc-recorder:/var/lib/bbb-webrtc-recorder
-    # WebRTC connection to bbb-webrtc-sfu seem to 
-    # only to work via the external IP
-    network_mode: host
-    extra_hosts:
-      - "redis:10.7.7.5"
-
-
-
-
-
-
-  # coturn
-  coturn:
-    image: coturn/coturn:4.6-alpine
-    restart: unless-stopped
-    command:
-      - "--external-ip=${EXTERNAL_IPv4}/${EXTERNAL_IPv4}"
-      - "--external-ip=${EXTERNAL_IPv6:-::1}/${EXTERNAL_IPv6:-::1}"
-      - "--static-auth-secret=${TURN_SECRET}"
-      - "--allowed-peer-ip=${EXTERNAL_IPv4}"
-      - "--relay-ip=${EXTERNAL_IPv4}"
-      - "--relay-ip=${EXTERNAL_IPv6:-::1}"
-    volumes:
-      - ./mod/coturn/turnserver.conf:/etc/coturn/turnserver.conf
-    network_mode: host
-
-
-
-  # greenlight
-  greenlight:
-    image: bigbluebutton/greenlight:v3.5.0
-    restart: unless-stopped
-    env_file: .env
-    depends_on:
-      - postgres
-      - redis
-
-    environment:
-      DATABASE_URL: postgres://postgres:${POSTGRESQL_SECRET:-password}@postgres:5432/greenlight
-      REDIS_URL: redis://redis:6379
-      
-      BIGBLUEBUTTON_ENDPOINT: https://${DOMAIN}/bigbluebutton/api
-      
-      BIGBLUEBUTTON_SECRET: ${SHARED_SECRET}
-      SECRET_KEY_BASE: ${RAILS_SECRET}
-      RELATIVE_URL_ROOT: /
-    volumes:
-       - ./data/greenlight:/usr/src/app/storage
-    networks:
-      bbb-net:
-        ipv4_address: 10.7.7.21
-
-
-  postgres:
-    image: postgres:16-alpine
-    restart: unless-stopped
-    environment:
-      POSTGRES_MULTIPLE_DATABASES: bbb_graphql,hasura_app,greenlight
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ${POSTGRESQL_SECRET:-password}
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    volumes:
-      - ./data/postgres:/var/lib/postgresql/data
-      - ./mod/postgres/initdb.sh:/docker-entrypoint-initdb.d/initdb.sh
-    networks:
-      bbb-net:
-        ipv4_address: 10.7.7.22
-
-
-  # prometheus
-  prometheus-exporter:
-    image: greenstatic/bigbluebutton-exporter:latest
-    restart: unless-stopped
-    environment:
-      API_BASE_URL: http://10.7.7.1:48087/bigbluebutton/api/
-      API_SECRET: ${SHARED_SECRET}
-      RECORDINGS_METRICS_READ_FROM_DISK: "${ENABLE_PROMETHEUS_EXPORTER_OPTIMIZATION:-false}"
-    networks:
-      bbb-net:
-        ipv4_address: 10.7.7.33
-    
-    volumes:
-      - ./data/bigbluebutton:/var/bigbluebutton:ro
-    
-
-    # the exporter requires /etc/bigbluebutton/bigbluebutton-release
-    tmpfs:
-      - /etc/bigbluebutton:mode=777
-    entrypoint: sh -c 'echo "BIGBLUEBUTTON_RELEASE=2.7.3" > /etc/bigbluebutton/bigbluebutton-release && python server.py'
-
-
-networks:
-  bbb-net:
-    ipam:
-      driver: default
-      config:
-        - subnet: "10.7.7.0/24"
